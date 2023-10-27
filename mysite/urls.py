@@ -22,6 +22,4 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("golla/", include("golla.urls")),
-    path("api/", include(router.urls)),
 ]

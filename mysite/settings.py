@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+import pymysql
+from .privateSettingInfo import DatabaseInfo, StorageInfo
+pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -76,8 +80,12 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': DatabaseInfo.ENGINE,
+        'NAME': DatabaseInfo.NAME,
+        'USER': DatabaseInfo.USER,
+        'PASSWORD':DatabaseInfo.PASSWORD,
+        'HOST': DatabaseInfo.HOST,
+        'PORT':DatabaseInfo.PORT
     }
 }
 
@@ -106,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -122,3 +130,26 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+## AWS
+AWS_REGION = StorageInfo.AWS_REGION
+AWS_ACCESS_KEY_ID = StorageInfo.AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY = StorageInfo.AWS_SECRET_ACCESS_KEY
+
+## S3 Storages
+AWS_STORAGE_BUCKET_NAME = StorageInfo.AWS_STORAGE_BUCKET_NAME
+AWS_S3_CUSTOM_DOMAIN = StorageInfo.AWS_S3_CUSTOM_DOMAIN
+AWS_S3_OBJECT_PARAMETERS = StorageInfo.AWS_S3_OBJECT_PARAMETERS
+
+# Static Setting
+STATIC_URL = StorageInfo.STATIC_URL
+STATICFILES_STORAGE = StorageInfo.STATICFILES_STORAGE
+
+# Media Setting
+MEDIA_URL = StorageInfo.MEDIA_URL
+DEFAULT_FILE_STORAGE = StorageInfo.DEFAULT_FILE_STORAGE
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+DEFAULT_AUTO_FIELD = StorageInfo.DEFAULT_AUTO_FIELD
