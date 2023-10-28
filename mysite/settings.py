@@ -40,8 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'rest_framework',
     'storages',
+    
+    #구현 기능 apps
+    'goods',
+    'members',
 ]
 
 MIDDLEWARE = [
