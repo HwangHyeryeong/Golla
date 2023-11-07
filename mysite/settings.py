@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     
     #구현 기능 apps
     'goods',
-    'members',
+    #'members',
 ]
 
 MIDDLEWARE = [
