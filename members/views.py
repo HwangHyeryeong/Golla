@@ -37,6 +37,46 @@ def createMember(request):
             return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+@api_view(['POST'])
+def login(request):
+    email = request.data['email']
+    password = request.data['password']
+
+    try:
+        member = Member.objects.get(email=email)
+        if password == member.password:
+            data = {
+                "status": status.HTTP_200_OK,
+                "success": True,
+                "message": SUCCESS_LOGIN,
+                "data": {
+                    "memberCode": member.memberCode
+                }
+            }
+            return Response(data, status=status.HTTP_200_OK)
+        else:
+            data = {
+                "status": status.HTTP_401_UNAUTHORIZED,
+                "success": True,
+                "message": FAIL_LOGIN
+            }
+            return Response(data, status=status.HTTP_401_UNAUTHORIZED)
+    except Member.DoesNotExist:
+        data = {
+            "status": status.HTTP_401_UNAUTHORIZED,
+            "success": True,
+            "message": FAIL_LOGIN
+        }
+        return Response(data, status=status.HTTP_401_UNAUTHORIZED)
+    except Exception as e:
+        data = {
+            "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "success": False,
+            "message": SERVER_ERROR
+        }
+        return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 def isRegisteredMember(email):
     try:
         member = Member.objects.get(email=email)
