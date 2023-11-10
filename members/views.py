@@ -1,9 +1,10 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .serializer import JoinMemberSerializer
+from .serializer import *
 from .messages import *
 from .models import Member, Payment
+from django.db.models import Sum
 
 
 @api_view(['POST'])
@@ -86,3 +87,46 @@ def isRegisteredMember(email):
     except Exception as e:
         print(f"[ERROR@가입여부확인]: {e}")
         return False
+
+
+@api_view(['GET'])
+def readMemberInfo(request, memberCode):
+    try:
+        #회원 기본 정보
+        member = Member.objects.get(memberCode=memberCode)
+        infoSerializer = MemberSerializer(member).data
+
+        #등급 정보
+        grade = Grade.objects.get(gradeCode=member.grade)
+        gradeSerializer = GradeSerializer(grade).data
+
+        #구매 합산액
+        sumOfPayments = Payment.objects.aggregate(Sum('paymentPrice'))['paymentPrice__sum']
+
+        data = {
+            "status": status.HTTP_200_OK,
+            "success": True,
+            "message": SUCCESS_READ_MEMBER,
+            "data":{
+                **infoSerializer,
+                "totalPayment": sumOfPayments,
+                **gradeSerializer,
+            }
+        }
+        return Response(data, status=status.HTTP_200_OK)
+
+    except Member.DoesNotExist:
+        data = {
+            "status": status.HTTP_404_NOT_FOUND,
+            "success": True,
+            "message": NOT_FOUND_MEMBER
+        }
+        return Response(data, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        print(f"[ERROR@회원정보상세조회]: {e}")
+        data = {
+            "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "success": False,
+            "message": SERVER_ERROR
+        }
+        return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

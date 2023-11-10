@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Store(models.Model):
     store_code = models.AutoField(db_column='store_code', primary_key=True)  # Field name made lowercase.
     store_name = models.CharField(db_column='store_name', max_length=20)  # Field name made lowercase.
@@ -13,11 +12,11 @@ class Store(models.Model):
 
 
 class Grade(models.Model):
-    grade_code = models.AutoField(db_column='grade_code', primary_key=True)  # Field name made lowercase.
-    grade_name = models.CharField(db_column='grade_name', max_length=20)  # Field name made lowercase.
-    point_rate = models.IntegerField(db_column='point_rate')  # Field name made lowercase.
-    base_amount = models.IntegerField(db_column='base_amount')  # Field name made lowercase.
-    grade_img = models.CharField(db_column='grade_img', max_length=1000)  # Field name made lowercase.
+    gradeCode = models.AutoField(db_column='grade_code', primary_key=True)  # Field name made lowercase.
+    gradeName = models.CharField(db_column='grade_name', max_length=20)  # Field name made lowercase.
+    pointRate = models.IntegerField(db_column='point_rate')  # Field name made lowercase.
+    baseAmount = models.IntegerField(db_column='base_amount')  # Field name made lowercase.
+    gradeImg = models.CharField(db_column='grade_img', max_length=1000)  # Field name made lowercase.
 
     class Meta:
         managed = True
@@ -43,7 +42,7 @@ class Payment(models.Model):
     paymentcode = models.AutoField(db_column='paymentCode', primary_key=True)  # Field name made lowercase.
     membercode = models.ForeignKey(Member, models.DO_NOTHING, db_column='memberCode')  # Field name made lowercase.
     storecode = models.IntegerField(db_column='storeCode')  # Field name made lowercase.
-    paymentprice = models.IntegerField(db_column='paymentPrice')  # Field name made lowercase.
+    paymentPrice = models.IntegerField(db_column='paymentPrice')  # Field name made lowercase.
     paymentdate = models.DateTimeField(db_column='paymentDate')  # Field name made lowercase.
 
     class Meta:
