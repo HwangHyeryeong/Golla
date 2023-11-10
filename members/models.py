@@ -1,18 +1,41 @@
 from django.db import models
 
-# Create your models here.
+
+class Store(models.Model):
+    store_code = models.AutoField(db_column='store_code', primary_key=True)  # Field name made lowercase.
+    store_name = models.CharField(db_column='store_name', max_length=20)  # Field name made lowercase.
+    store_address = models.CharField(db_column='store_address', max_length=255)  # Field name made lowercase.
+    store_phone = models.CharField(db_column='store_phone', max_length=20)  # Field name made lowercase.
+
+    class Meta:
+        managed = True
+        db_table = 'store'
+
+
+class Grade(models.Model):
+    grade_code = models.AutoField(db_column='grade_code', primary_key=True)  # Field name made lowercase.
+    grade_name = models.CharField(db_column='grade_name', max_length=20)  # Field name made lowercase.
+    point_rate = models.IntegerField(db_column='point_rate')  # Field name made lowercase.
+    base_amount = models.IntegerField(db_column='base_amount')  # Field name made lowercase.
+    grade_img = models.CharField(db_column='grade_img', max_length=1000)  # Field name made lowercase.
+
+    class Meta:
+        managed = True
+        db_table = 'grade'
+
+
 class Member(models.Model):
-    member_code = models.AutoField(db_column='member_Code', primary_key=True)  # Field name made lowercase.
-    member_name = models.CharField(db_column='member_Name', max_length=20)  # Field name made lowercase.
+    memberCode = models.AutoField(db_column='member_Code', primary_key=True)  # Field name made lowercase.
+    name = models.CharField(db_column='member_Name', max_length=20)  # Field name made lowercase.
     email = models.CharField(max_length=320)
     password = models.CharField(max_length=30)
     nickname = models.CharField(max_length=20)
     grade = models.IntegerField()
-    member_point = models.IntegerField()
+    point = models.IntegerField()
     joindate = models.DateTimeField(db_column='joinDate')  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'member'
 
 
@@ -24,5 +47,5 @@ class Payment(models.Model):
     paymentdate = models.DateTimeField(db_column='paymentDate')  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'payment'

@@ -29,6 +29,7 @@ SECRET_KEY = SECRET_KEY
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    '127.0.0.1',
     EC2_HOST_URI
 ]
 
@@ -48,7 +49,7 @@ INSTALLED_APPS = [
     
     #구현 기능 apps
     'goods',
-    #'members',
+    'members',
 ]
 
 MIDDLEWARE = [
