@@ -39,6 +39,41 @@ def createMember(request):
 
 
 @api_view(['POST'])
+def updateMemberInfo(request):
+    memberCode = request.data['memberCode']
+    try:
+        member = Member.objects.get(memberCode=memberCode)
+        member.nickname = request.data['nickName']
+        member.password = request.data['password']
+        member.save()
+
+        data = {
+            "status": status.HTTP_200_OK,
+            "success": True,
+            "message": SUCCESS_UPDATE_MEMBER,
+            "data": {
+                "memberCode": memberCode
+            }
+        }
+        return Response(data, status=status.HTTP_200_OK)
+
+    except Member.DoesNotExist:
+        data = {
+            "status": status.HTTP_401_UNAUTHORIZED,
+            "success": True,
+            "message": FAIL_UPDATE_MEMBER
+        }
+        return Response(data, status=status.HTTP_401_UNAUTHORIZED)
+    except Exception as e:
+        data = {
+            "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "success": False,
+            "message": SERVER_ERROR
+        }
+        return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
 def login(request):
     email = request.data['email']
     password = request.data['password']
@@ -92,22 +127,22 @@ def isRegisteredMember(email):
 @api_view(['GET'])
 def readMemberInfo(request, memberCode):
     try:
-        #회원 기본 정보
+        # 회원 기본 정보
         member = Member.objects.get(memberCode=memberCode)
-        infoSerializer = MemberSerializer(member).data
+        infoSerializer = MemberSimpleSerializer(member).data
 
-        #등급 정보
+        # 등급 정보
         grade = Grade.objects.get(gradeCode=member.grade)
         gradeSerializer = GradeSerializer(grade).data
 
-        #구매 합산액
+        # 구매 합산액
         sumOfPayments = Payment.objects.aggregate(Sum('paymentPrice'))['paymentPrice__sum']
 
         data = {
             "status": status.HTTP_200_OK,
             "success": True,
             "message": SUCCESS_READ_MEMBER,
-            "data":{
+            "data": {
                 **infoSerializer,
                 "totalPayment": sumOfPayments,
                 **gradeSerializer,
@@ -133,9 +168,41 @@ def readMemberInfo(request, memberCode):
 
 
 @api_view(['GET'])
+def readMemberInfoSimple(request, memberCode):
+    try:
+        # 회원 기본 정보
+        member = Member.objects.get(memberCode=memberCode)
+        infoSerializer = MemberSerializer(member).data
+
+        data = {
+            "status": status.HTTP_200_OK,
+            "success": True,
+            "message": SUCCESS_READ_MEMBER,
+            "data": infoSerializer,
+        }
+        return Response(data, status=status.HTTP_200_OK)
+
+    except Member.DoesNotExist:
+        data = {
+            "status": status.HTTP_404_NOT_FOUND,
+            "success": True,
+            "message": NOT_FOUND_MEMBER
+        }
+        return Response(data, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        print(f"[ERROR@회원정보조회-수정페이지용]: {e}")
+        data = {
+            "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "success": False,
+            "message": SERVER_ERROR
+        }
+        return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
 def readPaymentsHistory(request, memberCode):
     try:
-        member = Member.objects.get(memberCode=memberCode) #유효한 사용자인지 검사하는 용도
+        member = Member.objects.get(memberCode=memberCode)  # 유효한 사용자인지 검사하는 용도
 
         payments = Payment.objects.filter(memberCode=memberCode).values()
         paymentsSerializer = PaymentSerializer(payments, many=True).data

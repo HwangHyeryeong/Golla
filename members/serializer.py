@@ -8,10 +8,22 @@ class JoinMemberSerializer(serializers.ModelSerializer):
         fields = ('name', 'email', 'password', 'nickname', 'grade', 'point', 'joindate')
 
 
-class MemberSerializer(serializers.ModelSerializer):
+class MemberSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
         fields = ('memberCode', 'name', 'point')
+
+
+class MemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Member
+        fields = ('memberCode', 'name', 'email', 'nickname')
+
+
+class MemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Member
+        fields = ('memberCode', 'name', 'email', 'nickname')
 
 
 class GradeSerializer(serializers.ModelSerializer):
