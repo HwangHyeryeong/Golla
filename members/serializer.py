@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Member, Payment, Grade
-from django.utils import timezone
 
 
 class JoinMemberSerializer(serializers.ModelSerializer):
@@ -24,4 +23,4 @@ class GradeSerializer(serializers.ModelSerializer):
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-        fields = ('paymentcode', 'storecode', 'paymentPrice', 'paymentdate')
+        fields = ('paymentCode', 'storeCode', 'paymentPrice', 'paymentDate')

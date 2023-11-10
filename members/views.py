@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializer import *
 from .messages import *
-from .models import Member, Payment
+from .models import Member, Payment, Store
 from django.db.models import Sum
 
 
@@ -124,6 +124,38 @@ def readMemberInfo(request, memberCode):
         return Response(data, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         print(f"[ERROR@회원정보상세조회]: {e}")
+        data = {
+            "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "success": False,
+            "message": SERVER_ERROR
+        }
+        return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+def readPaymentsHistory(request, memberCode):
+    try:
+        member = Member.objects.get(memberCode=memberCode) #유효한 사용자인지 검사하는 용도
+
+        payments = Payment.objects.filter(memberCode=memberCode).values()
+        paymentsSerializer = PaymentSerializer(payments, many=True).data
+        data = {
+            "status": status.HTTP_200_OK,
+            "success": True,
+            "message": SUCCESS_READ_PAYMENTS,
+            "data": paymentsSerializer
+        }
+        return Response(data, status=status.HTTP_200_OK)
+
+    except Member.DoesNotExist:
+        data = {
+            "status": status.HTTP_404_NOT_FOUND,
+            "success": True,
+            "message": NOT_FOUND_MEMBER
+        }
+        return Response(data, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        print(f"[ERROR@회원주문내역조회]: {e}")
         data = {
             "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
             "success": False,

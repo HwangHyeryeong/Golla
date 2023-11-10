@@ -39,11 +39,11 @@ class Member(models.Model):
 
 
 class Payment(models.Model):
-    paymentcode = models.AutoField(db_column='paymentCode', primary_key=True)  # Field name made lowercase.
-    membercode = models.ForeignKey(Member, models.DO_NOTHING, db_column='memberCode')  # Field name made lowercase.
-    storecode = models.IntegerField(db_column='storeCode')  # Field name made lowercase.
+    paymentCode = models.AutoField(db_column='paymentCode', primary_key=True)  # Field name made lowercase.
+    memberCode = models.ForeignKey(Member, models.DO_NOTHING, db_column='memberCode')  # Field name made lowercase.
+    storeCode = models.IntegerField(db_column='storeCode')  # Field name made lowercase.
     paymentPrice = models.IntegerField(db_column='paymentPrice')  # Field name made lowercase.
-    paymentdate = models.DateTimeField(db_column='paymentDate')  # Field name made lowercase.
+    paymentDate = models.DateTimeField(db_column='paymentDate')  # Field name made lowercase.
 
     class Meta:
         managed = True
